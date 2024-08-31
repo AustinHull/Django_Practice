@@ -1,0 +1,1 @@
+Be advised, this repo does not include various "venv" (virtual environment) or app-specific "settings.py" app information and parameters. This is to allow for a relatively brief project repository, allowing users to pull content into properly-generated Django apps on their respective, local developer environments.
