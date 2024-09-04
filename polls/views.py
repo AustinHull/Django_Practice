@@ -21,7 +21,6 @@ class IndexView(generic.ListView):
 
 def post(request):
 	template_name = "polls/updateWaitTime/"
-	context_object_name = "polls_post_estimate"
 	try:
 		# If we're only calling the endpoint as a GET request, we allow CSRF_COOKIE to be set/returned to client, BUT 'success' param is listed as 'false'
 		# UNLESS request type made is, in-fact, a POST call instead.
