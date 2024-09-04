@@ -31,14 +31,17 @@ def post(request):
 	template_name = "polls/updateWaitTime/"
 	context_object_name = "polls_post_estimate"
 	try:
+		# If we're only calling the endpoint as a GET request, we allow CSRF_COOKIE to be set/returned to client, BUT 'success' param is listed as 'false'
+		# UNLESS request type made is, in-fact, a POST call instead.
 		responseDict = {"csrfmiddlewaretoken": request.META["CSRF_COOKIE"], "success": "false"}
 		print(responseDict)
+		latest_eta_ref_value = get_object_or_404(EstimatedWaitTime, pk=1)
 		if request.method == "POST":
 			reqBody = json.loads(request.body)
 			print("Body Data from POST req: ")
 			print(reqBody)
-			latest_eta_ref_value = get_object_or_404(EstimatedWaitTime, pk=1)
-			calculated_time = latest_eta_ref_value #.set(pk=request.POST["waitEstimate"])
+			# latest_eta_ref_value = get_object_or_404(EstimatedWaitTime, pk=1)
+			calculated_time = latest_eta_ref_value
 			calculated_time.waitingTime = reqBody['waitingTime']
 			calculated_time.save()
 			responseDict['waitingTime'] = calculated_time.waitingTime
@@ -47,7 +50,7 @@ def post(request):
 		else:
 			print('csrf: ', request.META["CSRF_COOKIE"])
 			# Extra request-side processing in the context of this else-conditional...
-			latest_eta_ref_value = get_object_or_404(EstimatedWaitTime, pk=1)
+			# latest_eta_ref_value = get_object_or_404(EstimatedWaitTime, pk=1)
 			responseDict['waitingTime'] = latest_eta_ref_value.waitingTime
 			return JsonResponse(responseDict)
 	except (KeyError, Choice.DoesNotExist):
