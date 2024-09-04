@@ -10,22 +10,14 @@ from django.views.decorators.csrf import csrf_protect, requires_csrf_token, csrf
 from django.middleware.csrf import get_token
 import json
 
-from .models import Choice, Question, EstimatedWaitTime
+from .models import EstimatedWaitTime
 
 class IndexView(generic.ListView):
 	template_name = "polls/index.html"
 	context_object_name = "latest_wait_estimate"
 	def get_queryset(self):
-		"""Return the last five published questions."""
+		"""Return the last five published wait-estimates."""
 		return EstimatedWaitTime.objects.order_by("-pub_date")
-
-class DetailView(generic.DetailView):
-	model = EstimatedWaitTime
-	template_name = "polls/detail.html"
-
-class ResultsView(generic.DetailView):
-	model = EstimatedWaitTime
-	template_name = "polls/results.html"
 
 def post(request):
 	template_name = "polls/updateWaitTime/"
@@ -53,8 +45,8 @@ def post(request):
 			# latest_eta_ref_value = get_object_or_404(EstimatedWaitTime, pk=1)
 			responseDict['waitingTime'] = latest_eta_ref_value.waitingTime
 			return JsonResponse(responseDict)
-	except (KeyError, Choice.DoesNotExist):
-		# Redisplay question voting form
+	except (KeyError, EstimatedWaitTime.DoesNotExist):
+		# Redisplay waiting-index form
 		return render(
 			request,
 			"polls/index.html",
