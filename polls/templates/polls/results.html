@@ -5,13 +5,11 @@
     <title>Welcome to the Live Registration ETA Display</title>
   </head>
   <body>
-    <header><h1>{{ question.question_text }}</h1></header>
+    <header><h1>{{ estimatedwaittime.etaMessage }}</h1></header>
     <main>
-      <ul>
-      {% for choice in question.choice_set.all %}
-        <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+      {% for entry in estimatedwaittime.choice_set.all %}
+        {{ entry.etaMessage }} -- {{ entry.waitEstimate }} vote{{ entry.votes|pluralize }}</li>
       {% endfor %}
-      </ul>
       <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
     </main>
     <footer></footer>
