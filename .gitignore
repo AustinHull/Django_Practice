@@ -1,3 +1,6 @@
 FdRegApi/settings.py
 polls/__pycache__/
 FdRegApi/__pycache__/
+__pycache__/
+*.py[cod]
+*$py.class
