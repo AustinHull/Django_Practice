@@ -28,6 +28,8 @@ def post(request):
 		responseDict = {"csrfmiddlewaretoken": request.META["CSRF_COOKIE"], "success": "false"}
 		print(responseDict)
 		latest_eta_ref_value = get_object_or_404(EstimatedWaitTime, pk=1)
+
+		# Desired behavior when reaching this endpoint via POST request will be slightly different than desired behavior when reaching same endpoint via GET request.
 		if request.method == "POST":
 			reqBody = json.loads(request.body)
 			print("Body Data from POST req: ")
@@ -38,13 +40,14 @@ def post(request):
 			calculated_time.save()
 			responseDict['waitingTime'] = calculated_time.waitingTime
 			responseDict['success'] = "true"
-			return JsonResponse(responseDict)
+			#return JsonResponse(responseDict)
 		else:
+			# When accessing endpoint via GET request, attempt to collect CSRF_COOKIE for CSRF/CORS validation against any future POST request client may make
 			print('csrf: ', request.META["CSRF_COOKIE"])
 			# Extra request-side processing in the context of this else-conditional...
-			# latest_eta_ref_value = get_object_or_404(EstimatedWaitTime, pk=1)
 			responseDict['waitingTime'] = latest_eta_ref_value.waitingTime
-			return JsonResponse(responseDict)
+			# return JsonResponse(responseDict)
+		return JsonResponse(responseDict)
 	except (KeyError, EstimatedWaitTime.DoesNotExist):
 		# Redisplay waiting-index form
 		return render(
