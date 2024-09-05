@@ -3,18 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title>Welcome to The Polls Index</title>
+    <script src=" https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js ">
+      const csrftoken = Cookies.get('csrftoken');
+    </script>
   </head>
   <body>
-    <header></header>
+    <header>{% csrf_token %}</header>
     <main>
-      {% if latest_question_list %}
-        <ul>
-        {% for question in latest_question_list %}
-          <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+      {% if latest_wait_estimate %}
+        {% for message in latest_wait_estimate %}
+          <h3>{{ message.etaMessage }}</h3>
+          <h3>{{ message.waitingTime}} minutes (Approximate)</h3>
+          <br>
         {% endfor %}
-        </ul>
+        <!-- ETA update/polling logic - Keep working on THIS formatting-area, in order to migrate/refactor over to ETA DB value! etaMessage instead of question_text, etc, etc... -->
       {% else %}
-        <p>No polls are available.</p>
+        <p>No Messages are available.</p>
       {% endif %}
     </main>
     <footer></footer>
